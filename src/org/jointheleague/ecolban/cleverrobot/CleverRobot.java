@@ -13,11 +13,9 @@ import org.jointheleague.ecolban.rpirobot.SimpleIRobot;
 public class CleverRobot extends IRobotAdapter {
 	Sonar sonar = new Sonar();
 	private boolean tailLight;
-
 	public CleverRobot(IRobotInterface iRobot) {
 		super(iRobot);
 	}
-
 	public static void main(String[] args) throws Exception {
 		System.out.println("Try event listner, rev Monday 2030");
 		IRobotInterface base = new SimpleIRobot();
@@ -26,23 +24,34 @@ public class CleverRobot extends IRobotAdapter {
 		while (rob.loop()) {
 		}
 		rob.shutDown();
-
 	}
-
 	private void setup() throws Exception {
 		driveDirect(100, 100);
 	}
-
+	//boolean on = true;
 	private boolean loop() throws Exception {
-		System.out.println("LEFT SONAR: " + sonar.readSonar("left"));
-		Thread.sleep(1000);
-		setTailLight(tailLight = !tailLight);
-		System.out.println("RIGHT SONAR: " + sonar.readSonar("right"));
-		System.out.println("CENTER SONAR: " + sonar.readSonar("center"));
-
+		driveDirect(300,300);
+		readSensors(100);
+		//left turn
+		if(isBumpRight()){
+			driveDirect(-200,0);
+			Thread.sleep(800);
+		}
+		//right turn
+		if(isBumpLeft()){
+			driveDirect(0,-200);
+			Thread.sleep(800);
+		}
+		//back out to the left
+		if(isBumpLeft() && isBumpRight()){
+			driveDirect(-200,-100);
+			Thread.sleep(1000);
+		}
+		
+		//this.setTailLight(on);
+		//on = !on;
 		return true;
 	}
-
 	private void shutDown() throws IOException {
 		reset();
 		stop();
